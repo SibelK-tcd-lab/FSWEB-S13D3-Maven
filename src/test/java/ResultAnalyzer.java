@@ -50,11 +50,10 @@ public class ResultAnalyzer implements TestWatcher, AfterAllCallback {
         Map<TestResultStatus, Long> summary = testResultsStatus.stream()
                 .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
 
-        // (summary.get(TestResultStatus.SUCCESSFUL) + summary.get(TestResultStatus.FAILED)) / summary.get(TestResultStatus.SUCCESSFUL);
         long success = summary.get(TestResultStatus.SUCCESSFUL) != null ? summary.get(TestResultStatus.SUCCESSFUL) : 0;
         long failure = summary.get(TestResultStatus.FAILED) != null ? summary.get(TestResultStatus.FAILED) : 0;
 
-        double score = (double) success / (success + failure);
+        double score = (success + failure == 0) ? 0.0 : (double) success / (success + failure);
         String userId = "307446";
 
         JSONObject json = new JSONObject();
@@ -78,6 +77,4 @@ public class ResultAnalyzer implements TestWatcher, AfterAllCallback {
             httpClient.close();
         }
     }
-
-
 }
